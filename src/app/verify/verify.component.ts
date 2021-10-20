@@ -32,6 +32,7 @@ export class VerifyComponent implements OnInit {
       })
       .subscribe((response) => {
         localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('isUserLoggedIn', 'true');
         this.authService.auth();
         this.router.navigate(['/']);
       });

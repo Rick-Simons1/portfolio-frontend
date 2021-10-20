@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/verify']);
         } else {
           localStorage.setItem('accessToken', response.accessToken);
+          localStorage.setItem('isUserLoggedIn', 'true');
           this.authService.auth();
           this.router.navigate(['/']);
         }
