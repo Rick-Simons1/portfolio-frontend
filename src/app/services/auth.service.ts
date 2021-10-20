@@ -14,8 +14,8 @@ export class AuthService {
     this.redirectUrl = url;
   }
 
-  public auth(login: string, password: string): void {
-    if (login === 'foo' && password === 'bar') {
+  public auth(): void {
+    if (localStorage.getItem('accessToken') !== null) {
       this.authenticated = true;
       this.redirectUrl = this.redirectUrl === undefined ? '/' : this.redirectUrl;
       this.router.navigate([this.redirectUrl]);

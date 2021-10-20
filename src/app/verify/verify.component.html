@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <main class="form-signin">
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+        <h1 class="h3 mb-3 fw-normal">Please enter the authentication code</h1>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingInput" placeholder="enter code" formControlName="code" />
+          <label for="floatingInput">enter code</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">verify</button>
+      </form>
+    </main>
+  </body>
+</html>

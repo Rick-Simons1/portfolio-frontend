@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { APIService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
+import { TwoFactorAuthenticationService } from '../services/two-factor-authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +14,32 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   public loginForm: FormGroup = new FormGroup({
-    email: new FormControl(''),
+    username: new FormControl(''),
     password: new FormControl(''),
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private apiService: APIService,
+    private twoFactorService: TwoFactorAuthenticationService,
+    private router: Router,
+  ) {}
 
   public onSubmit(): void {
-    this.authService.auth(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value);
+    this.apiService
+      .signin({
+        username: this.loginForm.get('username')?.value,
+        password: this.loginForm.get('password')?.value,
+      })
+      .subscribe((response) => {
+        if (response.mfa) {
+          this.twoFactorService.setUsername(this.loginForm.get('username')?.value);
+          this.router.navigate(['/verify']);
+        } else {
+          localStorage.setItem('accessToken', response.accessToken);
+          this.authService.auth();
+          this.router.navigate(['/']);
+        }
+      });
   }
 }

@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TwoFactorAuthenticationService {
+  QrImageUrl: string | undefined;
+  username: string | undefined;
 
-  constructor() { }
+  constructor() {}
+
+  setQrImageUrl(imageUrl: string) {
+    this.QrImageUrl = imageUrl;
+  }
+
+  setUsername(username: string) {
+    this.username = username;
+  }
 }

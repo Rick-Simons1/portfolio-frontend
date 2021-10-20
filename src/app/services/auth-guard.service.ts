@@ -9,6 +9,7 @@ export class AuthGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
   public canActivate(): boolean {
+    console.log('authguard ' + this.authService.isAuthenticated());
     if (!this.authService.isAuthenticated()) {
       this.authService.setRedirectUrl(this.router.url);
       this.router.navigate(['login']);
