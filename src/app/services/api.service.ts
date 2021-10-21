@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -40,5 +40,15 @@ export class APIService {
     return this.http.get<any>('http://localhost:8081/users/me', {
       headers: this.httpHeaders,
     });
+  }
+
+  public verifyReCaptcha(captchaResponse: string) {
+    return this.http.post<any>(
+      'http://localhost:8081/verifyCaptcha',
+      { captchaResponse },
+      {
+        headers: this.httpHeaders,
+      },
+    );
   }
 }

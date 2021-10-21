@@ -10,10 +10,18 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { VerifyComponent } from './verify/verify.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, PortfolioPageComponent, SignUpComponent, QrCodeComponent, VerifyComponent],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    PortfolioPageComponent,
+    SignUpComponent,
+    QrCodeComponent,
+    VerifyComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, RecaptchaModule],
   providers: [],
   bootstrap: [AppComponent],
 })
