@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RecaptchaErrorParameters } from 'ng-recaptcha';
 import { APIService } from '../services/api.service';
 import { TwoFactorAuthenticationService } from '../services/two-factor-authentication.service';
 
@@ -10,8 +11,10 @@ import { TwoFactorAuthenticationService } from '../services/two-factor-authentic
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent implements OnInit {
+  captchaSucces: boolean = false;
+
   constructor(
-    private apiservice: APIService,
+    private apiService: APIService,
     private twoFactorService: TwoFactorAuthenticationService,
     private router: Router,
   ) {}
@@ -27,22 +30,36 @@ export class SignUpComponent implements OnInit {
   });
 
   public onSubmit(): void {
-    this.apiservice
-      .signup({
-        name: this.signUpForm.get('name')?.value,
-        username: this.signUpForm.get('username')?.value,
-        email: this.signUpForm.get('email')?.value,
-        password: this.signUpForm.get('password')?.value,
-        mfa: this.signUpForm.get('MFA')?.value,
-      })
-      .subscribe((response) => {
-        console.log(response);
-        if (response.mfa) {
-          this.twoFactorService.setQrImageUrl(response.secretImageUri);
-          this.router.navigate(['/qrcode']);
-        } else {
-          this.router.navigate(['/login']);
-        }
-      });
+    if (this.captchaSucces) {
+      this.apiService
+        .signup({
+          name: this.signUpForm.get('name')?.value,
+          username: this.signUpForm.get('username')?.value,
+          email: this.signUpForm.get('email')?.value,
+          password: this.signUpForm.get('password')?.value,
+          mfa: this.signUpForm.get('MFA')?.value,
+        })
+        .subscribe((response) => {
+          console.log(response);
+          if (response.mfa) {
+            this.twoFactorService.setQrImageUrl(response.secretImageUri);
+            this.router.navigate(['/qrcode']);
+          } else {
+            this.router.navigate(['/login']);
+          }
+        });
+    } else {
+      console.log('must complete captcha');
+    }
+  }
+
+  public resolved(captchaResponse: string) {
+    this.apiService.verifyReCaptcha(captchaResponse).subscribe((response) => {
+      this.captchaSucces = response.success;
+    });
+  }
+
+  public onError(errorDetails: RecaptchaErrorParameters): void {
+    console.log(`reCAPTCHA error encountered; details:`, errorDetails);
   }
 }

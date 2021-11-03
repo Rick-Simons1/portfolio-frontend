@@ -40,6 +40,12 @@
         <div class="checkbox mb-3">
           <label> <input type="checkbox" value="MFA" formControlName="MFA" /> two factor authentication </label>
         </div>
+        <re-captcha
+          (resolved)="resolved($event)"
+          (error)="onError($event)"
+          errorMode="handled"
+          siteKey="6LcpFuUcAAAAAMVerMJUZswPGj2ES2z14IJBqJ1l"
+        ></re-captcha>
         Already have an account? <a routerLink="/login">login</a>
         <button class="w-100 btn btn-lg btn-primary" type="submit">register</button>
       </form>
