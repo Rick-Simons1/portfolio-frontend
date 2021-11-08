@@ -11,6 +11,8 @@ import { QrCodeComponent } from './qr-code/qr-code.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { VerifyComponent } from './verify/verify.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
     QrCodeComponent,
     VerifyComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, RecaptchaModule],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, RecaptchaModule, ToastrModule.forRoot(), BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

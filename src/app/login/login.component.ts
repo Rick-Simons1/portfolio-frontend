@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RecaptchaErrorParameters } from 'ng-recaptcha';
+import { ToastrService } from 'ngx-toastr';
 import { APIService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { TwoFactorAuthenticationService } from '../services/two-factor-authentication.service';
+
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,8 @@ export class LoginComponent implements OnInit {
     private apiService: APIService,
     private twoFactorService: TwoFactorAuthenticationService,
     private router: Router,
+    private toastrService: ToastrService
+
   ) {}
 
   public onSubmit(): void {
@@ -45,19 +49,32 @@ export class LoginComponent implements OnInit {
             this.authService.auth();
             this.router.navigate(['/']);
           }
-        });
+        }, error => {
+          console.log(error.error.message);
+          if(error.error.message === 'Bad credentials'){
+            this.toastrService.error('this username and password do not match')
+          }
+        })
     } else {
-      console.log('must complete captcha');
+      this.toastrService.error('please complete CAPTCHA before registering account')
     }
   }
 
   public resolved(captchaResponse: string) {
-    this.apiService.verifyReCaptcha(captchaResponse).subscribe((response) => {
-      this.captchaSucces = response.success;
-    });
+    if(captchaResponse !== null){
+      this.apiService.verifyReCaptcha(captchaResponse).subscribe((response) => {
+        this.captchaSucces = response.success;
+      });
+    }else{
+      this.captchaSucces = false;
+    }
   }
 
   public onError(errorDetails: RecaptchaErrorParameters): void {
     console.log(`reCAPTCHA error encountered; details:`, errorDetails);
+  }
+
+  public onChange(value: any){
+    console.log(value);
   }
 }
