@@ -14,21 +14,21 @@ export class APIService {
 
   public signup(signUpRequest: Object): Observable<any> {
     console.log(signUpRequest);
-    return this.http.post<any>('http://localhost:8081/users', JSON.stringify(signUpRequest), {
+    return this.http.post<any>('/users', JSON.stringify(signUpRequest), {
       headers: this.httpHeaders,
     });
   }
 
   public signin(signInRequest: Object): Observable<any> {
     console.log(signInRequest);
-    return this.http.post<any>('http://localhost:8081/signin', JSON.stringify(signInRequest), {
+    return this.http.post<any>('/signin', JSON.stringify(signInRequest), {
       headers: this.httpHeaders,
     });
   }
 
   public verify(verifyRequest: Object): Observable<any> {
     console.log(verifyRequest);
-    return this.http.post<any>('http://localhost:8081/verify', JSON.stringify(verifyRequest), {
+    return this.http.post<any>('/verify', JSON.stringify(verifyRequest), {
       headers: this.httpHeaders,
     });
   }
@@ -37,14 +37,14 @@ export class APIService {
     if (localStorage.getItem('accessToken') !== null) {
       this.httpHeaders = this.httpHeaders.append('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
     }
-    return this.http.get<any>('http://localhost:8081/users/me', {
+    return this.http.get<any>('/users/me', {
       headers: this.httpHeaders,
     });
   }
 
   public verifyReCaptcha(captchaResponse: string) {
     return this.http.post<any>(
-      'http://localhost:8081/verifyCaptcha',
+      '/verifyCaptcha',
       { captchaResponse },
       {
         headers: this.httpHeaders,
