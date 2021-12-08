@@ -6,7 +6,6 @@ import { APIService } from '../services/api.service';
 import { TwoFactorAuthenticationService } from '../services/two-factor-authentication.service';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -19,7 +18,7 @@ export class SignUpComponent implements OnInit {
     private apiService: APIService,
     private twoFactorService: TwoFactorAuthenticationService,
     private router: Router,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
   ) {}
 
   ngOnInit(): void {}
@@ -33,43 +32,43 @@ export class SignUpComponent implements OnInit {
   });
 
   public onSubmit(): void {
-    if(this.captchaSucces){
+    if (this.captchaSucces) {
       this.apiService
-      .signup({
-        name: this.signUpForm.get('name')?.value,
-        username: this.signUpForm.get('username')?.value,
-        email: this.signUpForm.get('email')?.value,
-        password: this.signUpForm.get('password')?.value,
-        mfa: this.signUpForm.get('MFA')?.value,
-      })
-      .subscribe((response) => {
-        console.log(response);
-        if (response.mfa) {
-          this.twoFactorService.setQrImageUrl(response.secretImageUri);
-          this.router.navigate(['/qrcode']);
-        } else {
-          this.router.navigate(['/login']);
-        }
-      }, error => {
-        if(error.error.message === `username ${this.signUpForm.get('username')?.value} already exists`){
-          this.toastrService.error(`username ${this.signUpForm.get('username')?.value} already exists`);
-        }
-        else if (error.error.message === `email ${this.signUpForm.get('email')} already exists`){
-          this.toastrService.error(`email ${this.signUpForm.get('email')} already exists`);
-        }
-      });
+        .signup({
+          name: this.signUpForm.get('name')?.value,
+          username: this.signUpForm.get('username')?.value,
+          email: this.signUpForm.get('email')?.value,
+          password: this.signUpForm.get('password')?.value,
+          mfa: this.signUpForm.get('MFA')?.value,
+        })
+        .subscribe(
+          (response) => {
+            if (response.mfa) {
+              this.twoFactorService.setQrImageUrl(response.secretImageUri);
+              this.router.navigate(['/qrcode']);
+            } else {
+              this.router.navigate(['/login']);
+            }
+          },
+          (error) => {
+            if (error.error.message === `username ${this.signUpForm.get('username')?.value} already exists`) {
+              this.toastrService.error(`username ${this.signUpForm.get('username')?.value} already exists`);
+            } else if (error.error.message === `email ${this.signUpForm.get('email')} already exists`) {
+              this.toastrService.error(`email ${this.signUpForm.get('email')} already exists`);
+            }
+          },
+        );
     } else {
-      this.toastrService.error('please complete CAPTCHA before registering account')
+      this.toastrService.error('please complete CAPTCHA before registering account');
     }
-    
   }
 
   public resolved(captchaResponse: string) {
-    if(captchaResponse !== null){
+    if (captchaResponse !== null) {
       this.apiService.verifyReCaptcha(captchaResponse).subscribe((response) => {
         this.captchaSucces = response.success;
       });
-    }else{
+    } else {
       this.captchaSucces = false;
     }
   }
